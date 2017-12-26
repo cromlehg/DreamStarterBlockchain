@@ -46,25 +46,20 @@ int main(int argc, char** argv) {
    fc::oexception unhandled_exception;
    try {
 
-#ifdef IS_TEST_NET
       std::cerr << "------------------------------------------------------\n\n";
-      std::cerr << "            STARTING TEST NETWORK\n\n";
+      std::cerr << "            STARTING " << std::string(STEEMIT_SYMBOL) << " NETWORK\n\n";
       std::cerr << "------------------------------------------------------\n";
+#ifdef IS_TEST_NET
       auto initminer_private_key = graphene::utilities::key_to_wif( STEEMIT_INIT_PRIVATE_KEY );
       std::cerr << "initminer public key: " << STEEMIT_INIT_PUBLIC_KEY_STR << "\n";
       std::cerr << "initminer private key: " << initminer_private_key << "\n";
-      std::cerr << "chain id: " << std::string(STEEMIT_CHAIN_ID) << "\n";
-      std::cerr << "blockchain version: " << fc::string( STEEMIT_BLOCKCHAIN_VERSION ) << "\n";
-      std::cerr << "------------------------------------------------------\n";
 #else
-      std::cerr << "------------------------------------------------------\n\n";
-      std::cerr << "            STARTING STEEM NETWORK\n\n";
-      std::cerr << "------------------------------------------------------\n";
       std::cerr << "initminer public key: " << STEEMIT_INIT_PUBLIC_KEY_STR << "\n";
+#endif
       std::cerr << "chain id: " << std::string(STEEMIT_CHAIN_ID) << "\n";
       std::cerr << "blockchain version: " << fc::string( STEEMIT_BLOCKCHAIN_VERSION ) << "\n";
       std::cerr << "------------------------------------------------------\n";
-#endif
+
 
       bpo::options_description app_options("Steem Daemon");
       bpo::options_description cfg_options("Steem Daemon");
