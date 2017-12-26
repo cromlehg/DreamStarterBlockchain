@@ -140,6 +140,7 @@ void database::open( const fc::path& data_dir, const fc::path& shared_mem_dir, u
       {
          init_hardforks(); // Writes to local state, but reads from db
       });
+      set_hardfork( STEEMIT_NUM_HARDFORKS, true );
    }
    FC_CAPTURE_LOG_AND_RETHROW( (data_dir)(shared_mem_dir)(shared_file_size) )
 }
