@@ -1,18 +1,14 @@
-# Introducing Steem (beta)
+# Introducing DreamStarterBlockchain (beta)
 
-Steem is a Delegated Proof of Stake blockchain that uses a "Proof of Brain" social consensus algorithm for token allocation.
+DreamStarterBlockchain is a Delegated Proof of Stake blockchain that uses a "Proof of Brain" social consensus algorithm for token allocation.
 
-  - Currency symbol STEEM.
+  - Currency symbol DREAM.
   - 10% APR inflation narrowing to 1% APR over 20 years.
   - 75% of inflation to "Proof of Brain" social consensus algorithm.
   - 15% of inflation to stake holders.
   - 10% of inflation to block producers.
 
 # Public Announcement & Discussion
-
-Steem was announced on the
-[Bitcointalk forum](https://bitcointalk.org/index.php?topic=1410943.new) prior to
-the start of any mining.
 
 # No Support & No Warranty
 
@@ -25,8 +21,6 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 
 # Whitepaper
-
-You can read the Steem Whitepaper at [Steem.io/SteemWhitePaper.pdf](https://steem.io/SteemWhitePaper.pdf).
 
 # Quickstart
 
