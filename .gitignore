@@ -1,6 +1,8 @@
 *.a
 *.sw*
 
+vendor/secp256k1-zkp
+
 *.cmake
 CMakeCache.txt
 CMakeFiles
@@ -11,6 +13,9 @@ moc_*
 hardfork.hpp
 
 lcov
+
+libraries/manifest/gensrc/
+libraries/manifest/template_context/
 
 libraries/utilities/git_revision.cpp
 
