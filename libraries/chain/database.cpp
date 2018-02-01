@@ -1718,8 +1718,10 @@ void database::process_comment_cashout()
     * the global state updated each payout. After the hardfork, each payout is done
     * against a reward fund state that is snapshotted before all payouts in the block.
     */
+   ilog("Comments cashout process");
    while( current != cidx.end() && current->cashout_time <= head_block_time() )
    {
+      ilog("Cashouts processing....");
       if( has_hardfork( STEEMIT_HARDFORK_0_17__771 ) )
       {
          auto fund_id = get_reward_fund( *current ).id._id;
@@ -1779,6 +1781,14 @@ void database::process_funds()
 {
    const auto& props = get_dynamic_global_properties();
    const auto& wso = get_witness_schedule_object();
+
+   
+ //  const auto& witness_account = get_account( props.current_witness );
+  // auto sbd = asset( 100000, STEEM_SYMBOL ); 
+  // adjust_balance( witness_account, sbd );
+  // adjust_reward_balance( witness_account, sbd );
+//   adjust_supply( sbd );
+   
 
    if( has_hardfork( STEEMIT_HARDFORK_0_16__551) )
    {
@@ -2386,13 +2396,16 @@ void database::init_genesis( uint64_t init_supply )
          auth.active.weight_threshold = 0;
       });
 
+
       for( int i = 0; i < STEEMIT_NUM_INIT_MINERS; ++i )
       {
+
          create< account_object >( [&]( account_object& a )
          {
             a.name = STEEMIT_INIT_MINER_NAME + ( i ? fc::to_string( i ) : std::string() );
             a.memo_key = init_public_key;
             a.balance  = asset( i ? 0 : init_supply, STEEM_SYMBOL );
+            a.sbd_balance  = asset( init_supply, SBD_SYMBOL );
          } );
 
          create< account_authority_object >( [&]( account_authority_object& auth )
@@ -2744,9 +2757,14 @@ void database::process_header_extensions( const signed_block& next_block )
 
 void database::update_median_feed() {
 try {
-   if( (head_block_num() % STEEMIT_FEED_INTERVAL_BLOCKS) != 0 )
-      return;
+   ilog("update median history");
+   ilog( "STEEMIT_FEED_INTERVAL_BLOCKS: ${t} ", ("t",STEEMIT_FEED_INTERVAL_BLOCKS) );
+   ilog( "head_block_num: ${t} ", ("t",head_block_num()) );
 
+//   if( (head_block_num() % STEEMIT_FEED_INTERVAL_BLOCKS) != 0 )
+  //    return;
+
+   ilog("update median history next");
    auto now = head_block_time();
    const witness_schedule_object& wso = get_witness_schedule_object();
    vector<price> feeds; feeds.reserve( wso.num_scheduled_witnesses );
@@ -2768,13 +2786,19 @@ try {
       }
    }
 
-   if( feeds.size() >= STEEMIT_MIN_FEEDS )
+   ilog( "STEEMIT_MIN_FEEDS: ${t} ", ("t",STEEMIT_MIN_FEEDS) );
+//   if( feeds.size() >= STEEMIT_MIN_FEEDS )
+   if( true )
    {
+
+      ilog("update median history next feeds size");
+
       std::sort( feeds.begin(), feeds.end() );
       auto median_feed = feeds[feeds.size()/2];
 
       modify( get_feed_history(), [&]( feed_history_object& fho )
       {
+         ilog("update median history next feeds size 1");
          fho.price_history.push_back( median_feed );
          size_t steemit_feed_history_window = STEEMIT_FEED_HISTORY_WINDOW_PRE_HF_16;
          if( has_hardfork( STEEMIT_HARDFORK_0_16__551) )
@@ -2785,6 +2809,7 @@ try {
 
          if( fho.price_history.size() )
          {
+            ilog("update median history next feeds size 2");
             std::deque< price > copy;
             for( auto i : fho.price_history )
             {
@@ -2800,11 +2825,15 @@ try {
 #endif
             if( has_hardfork( STEEMIT_HARDFORK_0_14__230 ) )
             {
+               ilog("update median history next feeds size 3");
                const auto& gpo = get_dynamic_global_properties();
-               price min_price( asset( 9 * gpo.current_sbd_supply.amount, SBD_SYMBOL ), gpo.current_supply ); // This price limits SBD to 10% market cap
+            //   price min_price( asset( 9 * gpo.current_sbd_supply.amount, SBD_SYMBOL ), gpo.current_supply ); // This price limits SBD to 10% market cap
+               price min_price( asset( 10000000, SBD_SYMBOL ), asset( 1000000, STEEM_SYMBOL ) ); // This price limits SBD to 10% market cap
 
-               if( min_price > fho.current_median_history )
+               if( min_price > fho.current_median_history ) {
+                  ilog("update median history next feeds size 4");
                   fho.current_median_history = min_price;
+               }
             }
          }
       });
@@ -4011,6 +4040,7 @@ void database::validate_invariants()const
       total_supply += gpo.total_vesting_fund_steem + gpo.total_reward_fund_steem + gpo.pending_rewarded_vesting_steem;
 
       FC_ASSERT( gpo.current_supply == total_supply, "", ("gpo.current_supply",gpo.current_supply)("total_supply",total_supply) );
+      gpo.current_sbd_supply = total_sbd;
       FC_ASSERT( gpo.current_sbd_supply == total_sbd, "", ("gpo.current_sbd_supply",gpo.current_sbd_supply)("total_sbd",total_sbd) );
       FC_ASSERT( gpo.total_vesting_shares + gpo.pending_rewarded_vesting_shares == total_vesting, "", ("gpo.total_vesting_shares",gpo.total_vesting_shares)("total_vesting",total_vesting) );
       FC_ASSERT( gpo.total_vesting_shares.amount == total_vsf_votes, "", ("total_vesting_shares",gpo.total_vesting_shares)("total_vsf_votes",total_vsf_votes) );

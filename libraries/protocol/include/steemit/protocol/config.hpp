@@ -235,7 +235,7 @@
 #define STEEMIT_SOFT_MAX_BLOCK_SIZE             (2*1024*1024)
 #define STEEMIT_MIN_BLOCK_SIZE                  115
 #define STEEMIT_BLOCKS_PER_HOUR                 (60*60/STEEMIT_BLOCK_INTERVAL)
-#define STEEMIT_FEED_INTERVAL_BLOCKS            (STEEMIT_BLOCKS_PER_HOUR)
+#define STEEMIT_FEED_INTERVAL_BLOCKS            (STEEMIT_BLOCKS_PER_HOUR/100)
 #define STEEMIT_FEED_HISTORY_WINDOW_PRE_HF_16   (24*7) /// 7 days * 24 hours per day
 #define STEEMIT_FEED_HISTORY_WINDOW             (12*7) // 3.5 days
 #define STEEMIT_MAX_FEED_AGE_SECONDS            (60*60*24*7) // 7 days
